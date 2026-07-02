@@ -1,0 +1,15 @@
+{
+  "title": "Household Opportunity & Stress Index (HOSI)",
+  "baseline_year": 2019,
+  "scoring": "Each source series is normalized so its 2019 average equals 100. For stress-oriented series, score = current_value / 2019_average * 100. For opportunity or resilience series where higher values are better, score = 2019_average / current_value * 100. Higher HOSI always means more stress.",
+  "aggregation": {
+    "component_level": "Weighted mean within each component group using the configured series weights.",
+    "index_level": "Weighted mean of component groups using fixed group weights."
+  },
+  "caveats": [
+    "HOSI is experimental and not an official government statistic.",
+    "Service-capacity pressure is measured with labor-market proxies rather than direct queue or service availability data.",
+    "The housing affordability input uses a reproducible official proxy because the current FRED-hosted NAR fixed HAI window is too short for a 2019 baseline workflow.",
+    "Quarterly series are forward-filled to monthly cadence after release dates to support a unified monthly dashboard."
+  ]
+}

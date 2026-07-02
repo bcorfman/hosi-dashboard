@@ -22,6 +22,7 @@ PARQUET_PATH = PROCESSED_DIR / "hosi_monthly.parquet"
 COMPONENTS_PATH = PROCESSED_DIR / "component_scores.parquet"
 SOURCES_PATH = PROCESSED_DIR / "sources.json"
 METHODOLOGY_PATH = PROCESSED_DIR / "methodology.json"
+BASELINE_START = pd.Timestamp("2019-01-01")
 
 
 def fred_csv_url(series_id: str) -> str:
@@ -43,13 +44,18 @@ def download_series(definition: SeriesDefinition) -> pd.DataFrame:
     return frame
 
 
-def to_monthly(frame: pd.DataFrame, definition: SeriesDefinition) -> pd.DataFrame:
+def to_monthly(
+    frame: pd.DataFrame, definition: SeriesDefinition, max_date: pd.Timestamp
+) -> pd.DataFrame:
     data = frame.sort_values("date").copy()
+    observed_dates = data["date"].copy()
     data = data.set_index("date")
-    monthly = data.resample("MS").ffill().reset_index()
+    monthly_index = pd.date_range(start=data.index.min(), end=max_date, freq="MS")
+    monthly = data.reindex(monthly_index).ffill().reset_index()
+    monthly = monthly.rename(columns={"index": "date"})
     monthly["series"] = definition.key
     monthly["series_id"] = definition.series_id
-    monthly["is_observed_frequency"] = monthly["date"].isin(frame["date"])
+    monthly["is_observed_frequency"] = monthly["date"].isin(observed_dates)
     return monthly[["date", "series", "series_id", "value", "is_observed_frequency"]]
 
 
@@ -119,8 +125,13 @@ def build_dataset() -> None:
     RAW_DIR.mkdir(parents=True, exist_ok=True)
     PROCESSED_DIR.mkdir(parents=True, exist_ok=True)
 
+    downloaded_frames = {
+        definition.key: download_series(definition) for definition in SERIES_DEFINITIONS
+    }
+    max_date = max(frame["date"].max() for frame in downloaded_frames.values())
     monthly_frames = [
-        to_monthly(download_series(definition), definition) for definition in SERIES_DEFINITIONS
+        to_monthly(downloaded_frames[definition.key], definition, max_date)
+        for definition in SERIES_DEFINITIONS
     ]
     normalized = pd.concat(monthly_frames, ignore_index=True).sort_values(["date", "series"])
     scored = score_series(normalized)
@@ -131,12 +142,17 @@ def build_dataset() -> None:
         .reset_index()
         .rename_axis(None, axis=1)
     )
-    final = hosi.merge(wide_components, on="date", how="left").sort_values("date")
+    final = (
+        hosi.merge(wide_components, on="date", how="left")
+        .loc[lambda frame: frame["date"] >= BASELINE_START]
+        .sort_values("date")
+    )
     final.to_parquet(PARQUET_PATH, index=False)
 
     component_details = scored[
         ["date", "category", "series", "score", "value", "baseline_2019"]
     ].rename(columns={"category": "group", "series": "metric", "value": "raw_value"})
+    component_details = component_details.loc[component_details["date"] >= BASELINE_START]
     component_details.to_parquet(COMPONENTS_PATH, index=False)
 
     write_metadata()

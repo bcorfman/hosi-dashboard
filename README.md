@@ -29,9 +29,9 @@ HOSI is an experimental open-source Household Opportunity & Stress Index. It com
 
 ```bash
 cd backend
-python -m venv .venv
-source .venv/bin/activate
-pip install -e .[dev]
+uv venv
+. .venv/bin/activate
+uv pip install -e .[dev]
 python -m etl.build_hosi
 uvicorn app.main:app --reload
 ```
@@ -60,7 +60,7 @@ Set the repository variable `VITE_API_BASE` to the deployed Railway backend URL,
 
 ### Railway
 
-The backend will use `data/processed/hosi.duckdb` when present. If the artifact is missing, the application rebuilds the dataset from source downloads on first request. For a faster deploy path, publish the DuckDB and Parquet files from CI and make them available in the deploy image or mounted storage.
+The backend will use the committed `data/processed/hosi.duckdb` snapshot when present. If the snapshot is missing, the application rebuilds the dataset from source downloads on first request. The monthly GitHub Actions workflow also refreshes and commits the snapshot back to `main`.
 
 ## Data Source Notes
 

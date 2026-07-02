@@ -8,6 +8,9 @@ on:
     - cron: "0 13 1 * *"
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   backend:
     runs-on: ubuntu-latest
@@ -35,6 +38,13 @@ jobs:
             data/processed/component_scores.parquet
             data/processed/sources.json
             data/processed/methodology.json
+      - if: github.ref == 'refs/heads/main' && (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch')
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add ../data/processed/hosi.duckdb ../data/processed/hosi_monthly.parquet ../data/processed/component_scores.parquet ../data/processed/sources.json ../data/processed/methodology.json
+          git diff --cached --quiet || git commit -m "Refresh HOSI data snapshot"
+          git push
 
   frontend:
     runs-on: ubuntu-latest

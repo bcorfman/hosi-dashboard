@@ -5,6 +5,7 @@
     "node": "26.x"
   },
   "scripts": {
+    "dev": "npm --prefix frontend run dev",
     "frontend:install": "npm --prefix frontend install",
     "frontend:build": "npm --prefix frontend run build",
     "frontend:typecheck": "npm --prefix frontend run lint"
