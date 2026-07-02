@@ -56,11 +56,21 @@ VITE_API_BASE=http://127.0.0.1:8000 npm run dev
 
 ### GitHub Pages
 
-Set the repository variable `VITE_API_BASE` to the deployed Railway backend URL, then enable GitHub Pages in Actions mode. The workflow publishes `frontend/dist` on pushes to `main`.
+Set the repository variable `VITE_API_BASE` to the deployed Railway backend URL, then enable GitHub Pages in Actions mode. The Pages workflow is intentionally skipped until `VITE_API_BASE` is present so the static site does not publish with a broken API target.
 
 ### Railway
 
-The backend will use the committed `data/processed/hosi.duckdb` snapshot when present. If the snapshot is missing, the application rebuilds the dataset from source downloads on first request. The monthly GitHub Actions workflow also refreshes and commits the snapshot back to `main`.
+Deploy the backend as a Railway service with:
+
+- Source repo: `bcorfman/hosi-dashboard`
+- Branch: `main`
+- Root directory: `/backend`
+- Config file path: `/backend/railway.toml`
+- Wait for CI: enabled
+
+This mirrors the PhaserForge setup style while isolating HOSI to the Python backend only. The backend uses the committed `data/processed/hosi.duckdb` snapshot when present. If the snapshot is missing, the application rebuilds the dataset from source downloads on first request. The monthly GitHub Actions workflow also refreshes and commits the snapshot back to `main`.
+
+After Railway assigns a public domain, set the GitHub repository variable `VITE_API_BASE` to that HTTPS URL so the GitHub Pages frontend can call the live API.
 
 ## Data Source Notes
 
