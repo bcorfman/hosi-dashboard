@@ -17,7 +17,7 @@ export type ComponentResponse = {
   detail: Array<Record<string, string | number>>;
 };
 
-const API_BASE = import.meta.env.VITE_API_BASE || "http://127.0.0.1:8000";
+const API_BASE = import.meta.env.VITE_API_BASE || "";
 
 async function getJson<T>(path: string): Promise<T> {
   const response = await fetch(`${API_BASE}${path}`);
@@ -41,4 +41,3 @@ export const api = {
       caveats: string[];
     }>("/api/methodology"),
 };
-

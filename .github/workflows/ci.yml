@@ -60,8 +60,13 @@ jobs:
           cache-dependency-path: frontend/package-lock.json
       - run: npm ci
       - run: npm run lint
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:unit
+      - run: npm run test:stories
+      - run: npm run test:e2e:smoke
       - run: npm audit --audit-level=high
       - run: npm run build
+      - run: npm run build-storybook
 
   pages:
     if: github.ref == 'refs/heads/main'

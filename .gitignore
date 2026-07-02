@@ -6,6 +6,9 @@ node_modules/
 dist/
 coverage/
 .DS_Store
+storybook-static/
+test-results/
+playwright-report/
 backend/.ruff_cache/
 backend/.coverage
 backend/*.egg-info/
