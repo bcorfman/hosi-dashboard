@@ -8,8 +8,8 @@ coverage/
 .DS_Store
 backend/.ruff_cache/
 backend/.coverage
+backend/*.egg-info/
 data/raw/*
 data/processed/*
 !data/raw/.gitkeep
 !data/processed/.gitkeep
-
