@@ -1,0 +1,87 @@
+name: ci
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+  schedule:
+    - cron: "0 13 1 * *"
+  workflow_dispatch:
+
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          python-version: "3.13"
+      - run: uv venv
+      - run: . .venv/bin/activate && uv pip install -e .[dev]
+      - run: . .venv/bin/activate && python -m etl.build_hosi
+      - run: . .venv/bin/activate && pytest
+      - run: . .venv/bin/activate && ruff check .
+      - run: . .venv/bin/activate && mypy app etl
+      - run: . .venv/bin/activate && pip-audit
+      - uses: actions/upload-artifact@v4
+        with:
+          name: hosi-data
+          path: |
+            data/processed/hosi.duckdb
+            data/processed/hosi_monthly.parquet
+            data/processed/component_scores.parquet
+            data/processed/sources.json
+            data/processed/methodology.json
+
+  frontend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "26"
+          cache: "npm"
+          cache-dependency-path: frontend/package-lock.json
+      - run: npm ci
+      - run: npm run lint
+      - run: npm audit --audit-level=high
+      - run: npm run build
+
+  pages:
+    if: github.ref == 'refs/heads/main'
+    needs: [frontend]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "26"
+          cache: "npm"
+          cache-dependency-path: frontend/package-lock.json
+      - run: npm ci
+      - run: npm run build
+        env:
+          BASE_PATH: /${{ github.event.repository.name }}/
+          VITE_API_BASE: ${{ vars.VITE_API_BASE }}
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: frontend/dist
+      - id: deployment
+        uses: actions/deploy-pages@v4

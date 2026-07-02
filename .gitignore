@@ -1,0 +1,15 @@
+.venv/
+__pycache__/
+.pytest_cache/
+.mypy_cache/
+node_modules/
+dist/
+coverage/
+.DS_Store
+backend/.ruff_cache/
+backend/.coverage
+data/raw/*
+data/processed/*
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+

@@ -1,0 +1,12 @@
+{
+  "name": "hosi-dashboard",
+  "private": true,
+  "engines": {
+    "node": "26.x"
+  },
+  "scripts": {
+    "frontend:install": "npm --prefix frontend install",
+    "frontend:build": "npm --prefix frontend run build",
+    "frontend:typecheck": "npm --prefix frontend run lint"
+  }
+}

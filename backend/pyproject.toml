@@ -1,0 +1,53 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "hosi-backend"
+version = "0.1.0"
+description = "Experimental Household Opportunity & Stress Index API and ETL"
+requires-python = ">=3.11"
+dependencies = [
+  "duckdb>=1.0.0",
+  "fastapi>=0.115.0",
+  "httpx>=0.28.0",
+  "pandas>=2.2.0",
+  "pyarrow>=17.0.0",
+  "pydantic>=2.8.0",
+  "python-dateutil>=2.9.0",
+  "requests>=2.32.0",
+  "uvicorn[standard]>=0.30.0"
+]
+
+[project.optional-dependencies]
+dev = [
+  "mypy>=1.11.0",
+  "pip-audit>=2.7.0",
+  "pytest>=8.3.0",
+  "pytest-cov>=5.0.0",
+  "ruff>=0.6.0"
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["app*", "etl*"]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP"]
+
+[tool.mypy]
+python_version = "3.13"
+warn_unused_configs = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+strict_optional = true
+disallow_untyped_defs = true
+ignore_missing_imports = true
