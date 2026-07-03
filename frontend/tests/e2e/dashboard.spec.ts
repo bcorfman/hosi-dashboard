@@ -9,6 +9,8 @@ test("@smoke loads the dashboard overview and component pages", async ({ page })
   await expect(page.getByText("Latest month: 2026-06-01")).toBeVisible();
   await expect(page.getByText("20.3 points more stress than 2019")).toBeVisible();
   await expect(page.getByText("Pandemic shutdown shock")).toBeVisible();
+  await expect(page.getByText("Inflation and housing squeeze")).toBeVisible();
+  await expect(page.getByText("Only the clearest peaks are annotated here")).toBeVisible();
 
   await page.getByRole("link", { name: "Components" }).click();
   await expect(page.getByRole("heading", { name: "Component Breakdown" })).toBeVisible();

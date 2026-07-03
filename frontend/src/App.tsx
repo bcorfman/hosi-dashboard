@@ -73,19 +73,10 @@ const HOSI_TIMELINE = [
     detail: "Mass layoffs, hiring freezes, and abrupt service closures sent stress sharply higher.",
   },
   {
-    date: "2021-10-01",
-    label: "Reopening mismatch",
-    detail: "Demand came back faster than staffing, leaving households facing shortages and patchy service.",
-  },
-  {
-    date: "2022-09-01",
-    label: "Inflation and rate-hike squeeze",
-    detail: "Rising prices and tighter credit hit budgets and housing affordability at the same time.",
-  },
-  {
-    date: "2024-06-01",
-    label: "Cooling, not normalization",
-    detail: "Stress eased from the worst peaks, but labor-market mobility and household resilience stayed weaker than 2019.",
+    date: "2022-06-01",
+    label: "Inflation and housing squeeze",
+    detail:
+      "The second major peak lines up with the inflation surge and the jump in borrowing costs that hit household budgets and affordability.",
   },
 ] as const;
 
@@ -131,8 +122,9 @@ function OverviewPage({ latest, timeseries }: { latest: LatestResponse; timeseri
         <div className="panel-head">
           <h2>HOSI Time Series</h2>
           <p>
-            The dashed line is the 2019 baseline. Peaks mark moments when households felt sharper
-            financial, labor, or service stress.
+            The dashed line is the 2019 baseline. Only the clearest peaks are annotated here.
+            Smaller moves in a blended index often reflect several forces at once rather than one
+            clean news event.
           </p>
         </div>
         <SectionChart
