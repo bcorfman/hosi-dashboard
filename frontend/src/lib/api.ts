@@ -18,13 +18,49 @@ export type ComponentResponse = {
 };
 
 const API_BASE = import.meta.env.VITE_API_BASE || "";
+const RETRYABLE_STATUS_CODES = new Set([502, 503, 504]);
 
-async function getJson<T>(path: string): Promise<T> {
-  const response = await fetch(`${API_BASE}${path}`);
-  if (!response.ok) {
-    throw new Error(`Request failed: ${path}`);
+function sleep(ms: number): Promise<void> {
+  return new Promise((resolve) => {
+    window.setTimeout(resolve, ms);
+  });
+}
+
+type RequestOptions = {
+  retryDelaysMs?: number[];
+};
+
+export async function getJson<T>(
+  path: string,
+  { retryDelaysMs = [400, 1200] }: RequestOptions = {},
+): Promise<T> {
+  let lastError: Error | null = null;
+
+  for (let attempt = 0; attempt <= retryDelaysMs.length; attempt += 1) {
+    try {
+      const response = await fetch(`${API_BASE}${path}`);
+      if (!response.ok) {
+        if (RETRYABLE_STATUS_CODES.has(response.status) && attempt < retryDelaysMs.length) {
+          await sleep(retryDelaysMs[attempt]);
+          continue;
+        }
+        throw new Error(`Request failed: ${path}`);
+      }
+      return response.json() as Promise<T>;
+    } catch (error) {
+      lastError = error instanceof Error ? error : new Error(String(error));
+      if (attempt >= retryDelaysMs.length) {
+        break;
+      }
+      if (!(error instanceof TypeError)) {
+        throw error;
+      }
+      await sleep(retryDelaysMs[attempt]);
+      continue;
+    }
   }
-  return response.json() as Promise<T>;
+
+  throw lastError ?? new Error(`Request failed: ${path}`);
 }
 
 export const api = {
