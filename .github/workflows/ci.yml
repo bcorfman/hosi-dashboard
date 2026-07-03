@@ -10,7 +10,6 @@ on:
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-  HOME: /root
 
 permissions:
   contents: write
@@ -55,6 +54,8 @@ jobs:
     container:
       image: mcr.microsoft.com/playwright:v1.61.0-noble
       options: --ipc=host
+    env:
+      HOME: /root
     defaults:
       run:
         working-directory: frontend
