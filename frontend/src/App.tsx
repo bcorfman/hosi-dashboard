@@ -138,6 +138,8 @@ function OverviewPage({ latest, timeseries }: { latest: LatestResponse; timeseri
           data={timeseries}
           lines={[{ key: "value", label: "HOSI stress score", color: "#b5472d" }]}
           annotations={[...HOSI_TIMELINE]}
+          height={278}
+          showLegend={false}
         />
       </section>
     </Layout>
@@ -163,6 +165,7 @@ function ComponentsPage({ components }: { components: ComponentResponse }) {
             { key: "household_strain", label: "Household strain", color: "#aa7b00" },
             { key: "service_capacity", label: "Service pressure", color: "#3f4e8c" },
           ]}
+          height={300}
         />
       </section>
       <section className="panel">
