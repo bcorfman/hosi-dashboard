@@ -30,17 +30,18 @@ type SectionChartProps = {
   data: Array<Record<string, string | number>>;
   lines: Array<{ key: string; label: string; color: string }>;
   annotations?: Annotation[];
+  height?: number;
 };
 
 function isRangeAnnotation(annotation: Annotation): annotation is RangeAnnotation {
   return "dateStart" in annotation;
 }
 
-export function SectionChart({ data, lines, annotations = [] }: SectionChartProps) {
+export function SectionChart({ data, lines, annotations = [], height = 320 }: SectionChartProps) {
   return (
     <div>
       <div className="chart-shell">
-        <ResponsiveContainer width="100%" height={320}>
+        <ResponsiveContainer width="100%" height={height}>
           <LineChart data={data}>
             <CartesianGrid strokeDasharray="3 3" stroke="#d7dccf" />
             <XAxis dataKey="date" minTickGap={32} tick={{ fill: "#4f5747", fontSize: 12 }} />

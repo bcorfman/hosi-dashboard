@@ -39,12 +39,12 @@ function Layout({ children }: { children: React.ReactNode }) {
   return (
     <div className="app-shell">
       <header className="hero">
-        <div>
-          <p className="eyebrow">Experimental Index</p>
+        <div className="hero-copy-block">
+          <p className="eyebrow hero-kicker">Experimental Index</p>
           <h1>Household Opportunity & Stress Index</h1>
           <p className="hero-copy">
-            Unemployment can stay low while opportunity dries up, families get squeezed, and the
-            service economy runs half-staffed. HOSI tracks that gap against a 2019 baseline.
+            HOSI shows when unemployment looks calm but families, job seekers, and everyday
+            services are still under strain.
           </p>
         </div>
         <nav className="nav">
@@ -90,7 +90,7 @@ const HOSI_TIMELINE = [
 function OverviewPage({ latest, timeseries }: { latest: LatestResponse; timeseries: TimePoint[] }) {
   return (
     <Layout>
-      <section className="panel intro-panel">
+      <section className="panel intro-panel compact-panel">
         <div className="panel-head">
           <h2>How to Read This</h2>
           <p>
@@ -125,7 +125,7 @@ function OverviewPage({ latest, timeseries }: { latest: LatestResponse; timeseri
           directionLabel={stressDelta(latest.service_capacity)}
         />
       </section>
-      <section className="panel">
+      <section className="panel compact-panel">
         <div className="panel-head">
           <h2>HOSI Time Series</h2>
           <p>
