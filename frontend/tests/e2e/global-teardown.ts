@@ -1,10 +1,9 @@
 import { readFile, rm } from "node:fs/promises";
+import { fileURLToPath } from "node:url";
 import path from "node:path";
 
-const STATE_PATH = path.join(
-  "/home/bcorfman/dev/hosi-dashboard/frontend",
-  ".playwright-processes.json",
-);
+const CURRENT_DIR = path.dirname(fileURLToPath(import.meta.url));
+const STATE_PATH = path.resolve(CURRENT_DIR, "../../.playwright-processes.json");
 
 function killPid(pid: number | null): void {
   if (!pid) {
@@ -34,4 +33,3 @@ export default async function globalTeardown(): Promise<void> {
     // Ignore missing state.
   }
 }
-

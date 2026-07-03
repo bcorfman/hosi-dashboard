@@ -1,11 +1,32 @@
 import { spawn } from "node:child_process";
+import { existsSync } from "node:fs";
 import { writeFile } from "node:fs/promises";
+import { fileURLToPath } from "node:url";
 import path from "node:path";
 
-const ROOT = "/home/bcorfman/dev/hosi-dashboard";
+const CURRENT_DIR = path.dirname(fileURLToPath(import.meta.url));
+const ROOT = path.resolve(CURRENT_DIR, "../../..");
 const FRONTEND_DIR = path.join(ROOT, "frontend");
 const BACKEND_DIR = path.join(ROOT, "backend");
 const STATE_PATH = path.join(FRONTEND_DIR, ".playwright-processes.json");
+
+function resolveBackendPython(): string {
+  const candidates = [
+    path.join(BACKEND_DIR, ".venv", "bin", "python"),
+    path.join(BACKEND_DIR, ".venv", "bin", "python3"),
+    path.join(BACKEND_DIR, ".venv", "Scripts", "python.exe"),
+  ];
+
+  const pythonPath = candidates.find((candidate) => existsSync(candidate));
+  if (!pythonPath) {
+    throw new Error(
+      `Backend virtualenv not found. Expected one of: ${candidates.join(", ")}. ` +
+        "Run `cd backend && uv venv && uv pip install -e .[dev]` first.",
+    );
+  }
+
+  return pythonPath;
+}
 async function isReachable(url: string): Promise<boolean> {
   try {
     const response = await fetch(url);
@@ -50,9 +71,10 @@ async function spawnService(
 }
 
 export default async function globalSetup(): Promise<void> {
+  const backendPython = resolveBackendPython();
   const backendPid = await spawnService(
     "backend",
-    path.join(BACKEND_DIR, ".venv/bin/python"),
+    backendPython,
     ["-m", "uvicorn", "app.main:app", "--host", "127.0.0.1", "--port", "8000"],
     BACKEND_DIR,
   );
