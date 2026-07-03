@@ -89,22 +89,18 @@ jobs:
             frontend/playwright-report
             frontend/test-results
 
-  pages:
+  pages-build:
     if: github.ref == 'refs/heads/main' && vars.VITE_API_BASE != ''
     needs: [frontend]
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      pages: write
-      id-token: write
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     defaults:
       run:
         working-directory: frontend
     steps:
       - uses: actions/checkout@v7
+      - uses: actions/configure-pages@v6
       - uses: actions/setup-node@v6
         with:
           node-version: "26"
@@ -115,9 +111,21 @@ jobs:
         env:
           BASE_PATH: /${{ github.event.repository.name }}/
           VITE_API_BASE: ${{ vars.VITE_API_BASE }}
-      - uses: actions/configure-pages@v6
       - uses: actions/upload-pages-artifact@v5
         with:
           path: frontend/dist
+
+  pages-deploy:
+    if: github.ref == 'refs/heads/main' && vars.VITE_API_BASE != ''
+    needs: [pages-build]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
       - id: deployment
         uses: actions/deploy-pages@v5
