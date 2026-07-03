@@ -4,7 +4,7 @@
 
 HOSI, the **Household Opportunity & Stress Index**, is an open-source dashboard built around a simple idea:
 
-**headline unemployment tells you who kept a job. HOSI tries to tell you whether ordinary people can stay afloat, move up, and access the services the economy claims to provide.**
+**Headline unemployment tells you who kept a job. HOSI tries to tell you whether ordinary people can stay afloat, move up, and access the services the economy claims to provide.**
 
 Two economies can post the same unemployment rate and still feel completely different.
 
