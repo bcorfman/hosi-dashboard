@@ -7,7 +7,7 @@ HOSI is an experimental open-source Household Opportunity & Stress Index. It com
 - Frontend: React + TypeScript + Vite, structured for GitHub Pages deployment.
 - Backend: FastAPI, designed for Railway deployment.
 - Data: DuckDB plus generated Parquet and JSON metadata artifacts.
-- Charts: Recharts time-series with simple cards and tables.
+- Charts: Recharts time-series with simple cards and tables. 
 
 ## What HOSI Measures
 
