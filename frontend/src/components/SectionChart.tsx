@@ -31,23 +31,35 @@ type SectionChartProps = {
   lines: Array<{ key: string; label: string; color: string }>;
   annotations?: Annotation[];
   height?: number;
+  showLegend?: boolean;
 };
 
 function isRangeAnnotation(annotation: Annotation): annotation is RangeAnnotation {
   return "dateStart" in annotation;
 }
 
-export function SectionChart({ data, lines, annotations = [], height = 320 }: SectionChartProps) {
+export function SectionChart({
+  data,
+  lines,
+  annotations = [],
+  height = 320,
+  showLegend = lines.length > 1,
+}: SectionChartProps) {
   return (
     <div>
       <div className="chart-shell">
         <ResponsiveContainer width="100%" height={height}>
-          <LineChart data={data}>
+          <LineChart data={data} margin={{ top: 8, right: 10, left: -12, bottom: 26 }}>
             <CartesianGrid strokeDasharray="3 3" stroke="#d7dccf" />
-            <XAxis dataKey="date" minTickGap={32} tick={{ fill: "#4f5747", fontSize: 12 }} />
+            <XAxis
+              dataKey="date"
+              minTickGap={32}
+              tick={{ fill: "#4f5747", fontSize: 12 }}
+              tickMargin={8}
+            />
             <YAxis tick={{ fill: "#4f5747", fontSize: 12 }} />
             <Tooltip />
-            <Legend />
+            {showLegend ? <Legend verticalAlign="top" height={36} /> : null}
             <ReferenceLine
               y={100}
               stroke="#6d745f"
