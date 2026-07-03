@@ -13,6 +13,12 @@ describe("SectionChart", () => {
         annotations={[
           { date: "2020-04-01", label: "Pandemic shutdown shock", detail: "Mass layoffs and hiring freezes." },
           { date: "2022-06-01", label: "Inflation and housing squeeze", detail: "Prices and borrowing costs climbed together." },
+          {
+            dateStart: "2024-06-01",
+            dateEnd: "2026-06-01",
+            label: "Cooling, not normalization",
+            detail: "Stress drifted upward again even after the worst spikes had passed.",
+          },
         ]}
       />,
     );
@@ -20,5 +26,6 @@ describe("SectionChart", () => {
     expect(screen.getByTestId("responsive-container")).toBeInTheDocument();
     expect(screen.getByText("Pandemic shutdown shock")).toBeInTheDocument();
     expect(screen.getByText("Inflation and housing squeeze")).toBeInTheDocument();
+    expect(screen.getByText("Cooling, not normalization")).toBeInTheDocument();
   });
 });
