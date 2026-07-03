@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import time
 from pathlib import Path
 
 import duckdb
@@ -23,17 +24,38 @@ COMPONENTS_PATH = PROCESSED_DIR / "component_scores.parquet"
 SOURCES_PATH = PROCESSED_DIR / "sources.json"
 METHODOLOGY_PATH = PROCESSED_DIR / "methodology.json"
 BASELINE_START = pd.Timestamp("2019-01-01")
+REQUEST_HEADERS = {
+    "Accept": "text/csv,*/*;q=0.8",
+    "User-Agent": "hosi-dashboard/0.1 (+https://github.com/bcorfman/hosi-dashboard)",
+}
+RETRYABLE_STATUS_CODES = {404, 429, 500, 502, 503, 504}
 
 
 def fred_csv_url(series_id: str) -> str:
     return f"https://fred.stlouisfed.org/graph/fredgraph.csv?id={series_id}"
 
 
+def fetch_fred_csv(series_id: str) -> str:
+    url = fred_csv_url(series_id)
+    last_error: requests.RequestException | None = None
+    for attempt in range(3):
+        try:
+            response = requests.get(url, headers=REQUEST_HEADERS, timeout=60)
+            response.raise_for_status()
+            return response.text
+        except requests.RequestException as error:
+            last_error = error
+            status_code = getattr(getattr(error, "response", None), "status_code", None)
+            if attempt == 2 or status_code not in RETRYABLE_STATUS_CODES:
+                break
+            time.sleep(2**attempt)
+    assert last_error is not None
+    raise RuntimeError(f"Failed to download FRED series {series_id} from {url}") from last_error
+
+
 def download_series(definition: SeriesDefinition) -> pd.DataFrame:
-    response = requests.get(fred_csv_url(definition.series_id), timeout=60)
-    response.raise_for_status()
     csv_path = RAW_DIR / f"{definition.series_id}.csv"
-    csv_path.write_text(response.text, encoding="utf-8")
+    csv_path.write_text(fetch_fred_csv(definition.series_id), encoding="utf-8")
     frame = pd.read_csv(csv_path)
     frame.columns = ["date", "value"]
     frame["date"] = pd.to_datetime(frame["date"], errors="coerce")
