@@ -15,7 +15,7 @@ describe("storybook stories", () => {
 
   it("renders the elevated stress metric card story", () => {
     render(<metricCards.ElevatedStress />);
-    expect(screen.getByText("Overall HOSI")).toBeInTheDocument();
+    expect(screen.getByText("Overall stress")).toBeInTheDocument();
     expect(screen.getByText("120.3")).toBeInTheDocument();
   });
 
