@@ -43,8 +43,8 @@ function Layout({ children }: { children: React.ReactNode }) {
           <p className="eyebrow">Experimental Index</p>
           <h1>Household Opportunity & Stress Index</h1>
           <p className="hero-copy">
-            Compare post-pandemic household conditions against a 2019 baseline instead of relying on
-            headline unemployment alone.
+            Unemployment can stay low while opportunity dries up, families get squeezed, and the
+            service economy runs half-staffed. HOSI tracks that gap against a 2019 baseline.
           </p>
         </div>
         <nav className="nav">
@@ -59,33 +59,87 @@ function Layout({ children }: { children: React.ReactNode }) {
   );
 }
 
+function stressDelta(value: number): string {
+  const delta = Math.abs(value - 100).toFixed(1);
+  return value >= 100
+    ? `${delta} points more stress than 2019`
+    : `${delta} points less stress than 2019`;
+}
+
+const HOSI_TIMELINE = [
+  {
+    date: "2020-04-01",
+    label: "Pandemic shutdown shock",
+    detail: "Mass layoffs, hiring freezes, and abrupt service closures sent stress sharply higher.",
+  },
+  {
+    date: "2021-10-01",
+    label: "Reopening mismatch",
+    detail: "Demand came back faster than staffing, leaving households facing shortages and patchy service.",
+  },
+  {
+    date: "2022-09-01",
+    label: "Inflation and rate-hike squeeze",
+    detail: "Rising prices and tighter credit hit budgets and housing affordability at the same time.",
+  },
+  {
+    date: "2024-06-01",
+    label: "Cooling, not normalization",
+    detail: "Stress eased from the worst peaks, but labor-market mobility and household resilience stayed weaker than 2019.",
+  },
+] as const;
+
 function OverviewPage({ latest, timeseries }: { latest: LatestResponse; timeseries: TimePoint[] }) {
   return (
     <Layout>
+      <section className="panel intro-panel">
+        <div className="panel-head">
+          <h2>How to Read This</h2>
+          <p>
+            Every score uses <strong>2019 = 100</strong> as the reference point. Numbers above 100
+            mean more stress than pre-pandemic normal. Numbers below 100 mean less stress.
+          </p>
+        </div>
+      </section>
       <section className="card-grid">
-        <MetricCard label="Overall HOSI" value={latest.hosi} note={`Latest month: ${latest.date}`} />
         <MetricCard
-          label="Financial Resilience"
+          label="Overall stress"
+          value={latest.hosi}
+          note={`Latest month: ${latest.date}`}
+          directionLabel={stressDelta(latest.hosi)}
+        />
+        <MetricCard
+          label="Financial stress"
           value={latest.financial_resilience}
-          note="Savings, debt-service, delinquency, and earnings"
+          note="Savings, debt burden, delinquencies, and real earnings rolled into one stress score"
+          directionLabel={stressDelta(latest.financial_resilience)}
         />
         <MetricCard
-          label="Labor Opportunity"
+          label="Opportunity stress"
           value={latest.labor_opportunity}
-          note="Hires, quits, youth unemployment, and U-6"
+          note="How hard it is to break in, switch jobs, or find better labor-market options"
+          directionLabel={stressDelta(latest.labor_opportunity)}
         />
         <MetricCard
-          label="Service Capacity"
+          label="Service pressure"
           value={latest.service_capacity}
-          note="Leisure/hospitality staffing and openings pressure"
+          note="How much strain businesses face in actually staffing the services they advertise"
+          directionLabel={stressDelta(latest.service_capacity)}
         />
       </section>
       <section className="panel">
         <div className="panel-head">
           <h2>HOSI Time Series</h2>
-          <p>2019 average = 100. Higher values mean more stress.</p>
+          <p>
+            The dashed line is the 2019 baseline. Peaks mark moments when households felt sharper
+            financial, labor, or service stress.
+          </p>
         </div>
-        <SectionChart data={timeseries} lines={[{ key: "value", label: "HOSI", color: "#b5472d" }]} />
+        <SectionChart
+          data={timeseries}
+          lines={[{ key: "value", label: "HOSI stress score", color: "#b5472d" }]}
+          annotations={[...HOSI_TIMELINE]}
+        />
       </section>
     </Layout>
   );
@@ -97,15 +151,18 @@ function ComponentsPage({ components }: { components: ComponentResponse }) {
       <section className="panel">
         <div className="panel-head">
           <h2>Component Breakdown</h2>
-          <p>Grouped scores show where overall stress is coming from.</p>
+          <p>
+            These are all stress-style scores. Higher means a household is facing more pressure
+            from that part of the economy.
+          </p>
         </div>
         <SectionChart
           data={components.summary}
           lines={[
-            { key: "financial_resilience", label: "Financial resilience", color: "#7f2f20" },
-            { key: "labor_opportunity", label: "Labor opportunity", color: "#2c6e63" },
+            { key: "financial_resilience", label: "Financial stress", color: "#7f2f20" },
+            { key: "labor_opportunity", label: "Opportunity stress", color: "#2c6e63" },
             { key: "household_strain", label: "Household strain", color: "#aa7b00" },
-            { key: "service_capacity", label: "Service capacity", color: "#3f4e8c" },
+            { key: "service_capacity", label: "Service pressure", color: "#3f4e8c" },
           ]}
         />
       </section>
@@ -157,8 +214,8 @@ function ComparisonPage({ latest }: { latest: LatestResponse }) {
         <div className="panel-head">
           <h2>Pre-Pandemic vs Current</h2>
           <p>
-            Scores above 100 indicate more stress than the 2019 baseline. Scores below 100 indicate
-            less stress than 2019.
+            Everything on this page is translated into plain language relative to 2019 so you do
+            not have to decode whether “higher” is good or bad.
           </p>
         </div>
         <div className="comparison-list">
@@ -192,6 +249,11 @@ function MethodologyPage({
     <Layout>
       <section className="panel prose">
         <h2>{methodology.title}</h2>
+        <p>
+          HOSI is intentionally written as a stress index, not a “goodness” index. That means
+          higher numbers always indicate more strain relative to 2019, even when the underlying
+          source series is something normally considered positive, like savings or job switching.
+        </p>
         <p>{methodology.scoring}</p>
         <p>{methodology.aggregation.component_level}</p>
         <p>{methodology.aggregation.index_level}</p>
@@ -251,4 +313,3 @@ export default function App() {
     </Routes>
   );
 }
-

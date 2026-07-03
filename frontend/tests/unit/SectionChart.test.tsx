@@ -10,9 +10,13 @@ describe("SectionChart", () => {
       <SectionChart
         data={sampleTimeseries}
         lines={[{ key: "value", label: "HOSI", color: "#b5472d" }]}
+        annotations={[
+          { date: "2020-04-01", label: "Pandemic shutdown shock", detail: "Mass layoffs and hiring freezes." },
+        ]}
       />,
     );
 
     expect(screen.getByTestId("responsive-container")).toBeInTheDocument();
+    expect(screen.getByText("Pandemic shutdown shock")).toBeInTheDocument();
   });
 });
