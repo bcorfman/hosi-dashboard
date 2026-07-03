@@ -78,6 +78,13 @@ const HOSI_TIMELINE = [
     detail:
       "The second major peak lines up with the inflation surge and the jump in borrowing costs that hit household budgets and affordability.",
   },
+  {
+    dateStart: "2024-06-01",
+    dateEnd: "2026-06-01",
+    label: "Cooling, not normalization",
+    detail:
+      "The sharpest shocks eased, but stress kept rebuilding across a longer stretch as affordability, weak mobility, and thinner household buffers failed to return to 2019 conditions.",
+  },
 ] as const;
 
 function OverviewPage({ latest, timeseries }: { latest: LatestResponse; timeseries: TimePoint[] }) {
@@ -122,9 +129,9 @@ function OverviewPage({ latest, timeseries }: { latest: LatestResponse; timeseri
         <div className="panel-head">
           <h2>HOSI Time Series</h2>
           <p>
-            The dashed line is the 2019 baseline. Only the clearest peaks are annotated here.
-            Smaller moves in a blended index often reflect several forces at once rather than one
-            clean news event.
+            The dashed line is the 2019 baseline. Only the clearest peaks and stress-build periods
+            are annotated here. Smaller moves in a blended index often reflect several forces at
+            once rather than one clean news event.
           </p>
         </div>
         <SectionChart
