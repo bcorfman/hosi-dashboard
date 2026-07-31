@@ -72,7 +72,7 @@ They experience it as questions:
 - Can a recent graduate find a real first step?
 - Can I switch jobs without falling backward?
 - Can a family handle rent, insurance, food, and debt at the same time?
-- Are businesses actually open at the capacity they advertise?
+- Can families find and afford the childcare and healthcare they need?
 
 HOSI is an attempt to measure that lived economic ecosystem better than unemployment alone.
 
@@ -98,8 +98,10 @@ Current automated inputs come from official public releases, mainly through stab
 - `LNS14024887` youth unemployment rate, ages 16-24
 - `U6RATE` broad underemployment / labor underutilization
 - `LNS12026620` multiple jobholders as a share of employed
-- `USLAH` leisure and hospitality employment
-- `JTUJOR` job openings rate
+- `CUUR0000SEEB` childcare cost index
+- `CUSR0000SAM2` medical care services cost index
+- `CES6562440001` childcare services employment
+- `CES6562000001` healthcare and social assistance employment
 
 ## Important Caveats
 

@@ -12,7 +12,9 @@ def test_series_weights_positive() -> None:
 
 
 def test_service_component_is_household_facing() -> None:
-    service_series = [series for series in SERIES_DEFINITIONS if series.category == "service_access"]
+    service_series = [
+        series for series in SERIES_DEFINITIONS if series.category == "service_access"
+    ]
 
     assert {series.key for series in service_series} == {
         "childcare_cost_index",

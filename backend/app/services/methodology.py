@@ -206,7 +206,10 @@ SERIES_DEFINITIONS: tuple[SeriesDefinition, ...] = (
         direction="positive",
         weight=0.25,
         units="thousands of persons",
-        notes="Higher healthcare and social-assistance employment is a provider-capacity proxy for household access.",
+        notes=(
+            "Higher healthcare and social-assistance employment is a provider-capacity proxy "
+            "for household access."
+        ),
         public_url="https://fred.stlouisfed.org/series/CES6562000001",
     ),
 )
