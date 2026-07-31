@@ -26,8 +26,7 @@ export const ComponentBreakdown: Story = {
       { key: "financial_resilience", label: "Financial resilience", color: "#7f2f20" },
       { key: "labor_opportunity", label: "Labor opportunity", color: "#2c6e63" },
       { key: "household_strain", label: "Household strain", color: "#aa7b00" },
-      { key: "service_capacity", label: "Service capacity", color: "#3f4e8c" },
+      { key: "service_access", label: "Service access stress", color: "#3f4e8c" },
     ],
   },
 };
-

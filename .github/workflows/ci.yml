@@ -4,9 +4,6 @@ on:
   push:
     branches: ["main"]
   pull_request:
-  schedule:
-    - cron: "0 13 1 * *"
-  workflow_dispatch:
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
@@ -29,7 +26,7 @@ jobs:
       - run: . .venv/bin/activate && uv pip install -e .[dev]
       - run: . .venv/bin/activate && python -m etl.build_hosi
       - run: . .venv/bin/activate && pytest
-      - run: . .venv/bin/activate && ruff check .
+      - run: . .venv/bin/activate && ruff check --fix .
       - run: . .venv/bin/activate && mypy app etl
       - run: . .venv/bin/activate && pip-audit
       - uses: actions/upload-artifact@v7

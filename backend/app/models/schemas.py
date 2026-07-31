@@ -9,7 +9,7 @@ class LatestIndexResponse(BaseModel):
     financial_resilience: float
     labor_opportunity: float
     household_strain: float
-    service_capacity: float
+    service_access: float
 
 
 class TimePoint(BaseModel):
@@ -23,4 +23,3 @@ class ComponentPoint(BaseModel):
     metric: str
     score: float
     raw_value: float
-

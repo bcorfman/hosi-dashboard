@@ -22,7 +22,7 @@ export const ElevatedStress: Story = {
 
 export const ImprovedConditions: Story = {
   args: {
-    label: "Service pressure",
+    label: "Service access stress",
     value: 98.51,
     note: "Leisure/hospitality staffing and openings pressure",
     directionLabel: "1.5 points less stress than 2019",

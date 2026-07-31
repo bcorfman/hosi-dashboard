@@ -46,11 +46,13 @@ Are people patching together stability the hard way?
 
 - multiple jobholding
 
-### 4. Service Capacity
-Is the real economy staffed enough to deliver what it advertises?
+### 4. Service Access Stress
+How difficult is it for households to obtain everyday services?
 
-- leisure and hospitality employment
-- job openings pressure
+- childcare prices as an affordability barrier
+- medical-care prices as an affordability barrier
+- childcare employment as a provider-capacity proxy
+- healthcare and social-assistance employment as a provider-capacity proxy
 
 This is still version one. The long-term vision is broader:
 
@@ -70,7 +72,7 @@ They experience it as questions:
 - Can a recent graduate find a real first step?
 - Can I switch jobs without falling backward?
 - Can a family handle rent, insurance, food, and debt at the same time?
-- Are businesses actually open at the capacity they advertise?
+- Can families find and afford the childcare and healthcare they need?
 
 HOSI is an attempt to measure that lived economic ecosystem better than unemployment alone.
 
@@ -79,7 +81,7 @@ HOSI is an attempt to measure that lived economic ecosystem better than unemploy
 - A React + TypeScript frontend deployable to GitHub Pages
 - A FastAPI backend deployable to Railway
 - DuckDB + Parquet data artifacts for reproducible snapshots
-- Monthly ETL against official public data
+- Automated daily ETL against official public data
 - Clear source notes and methodology endpoints
 - A test stack with unit tests, Storybook tests, and Playwright smoke coverage
 
@@ -96,14 +98,16 @@ Current automated inputs come from official public releases, mainly through stab
 - `LNS14024887` youth unemployment rate, ages 16-24
 - `U6RATE` broad underemployment / labor underutilization
 - `LNS12026620` multiple jobholders as a share of employed
-- `USLAH` leisure and hospitality employment
-- `JTUJOR` job openings rate
+- `CUUR0000SEEB` childcare cost index
+- `CUSR0000SAM2` medical care services cost index
+- `CES6562440001` childcare services employment
+- `CES6562000001` healthcare and social assistance employment
 
 ## Important Caveats
 
 - HOSI is experimental. It is not an official government statistic.
 - Higher values mean more stress, not “better performance.”
-- Service-capacity pressure currently uses labor-market proxies, not direct operational wait-time or availability data.
+- Service-access stress combines service prices with provider employment as a capacity proxy; it does not yet include direct wait-time or unmet-need survey data.
 - Housing affordability currently uses the official `MDSP` proxy because the FRED-hosted NAR fixed HAI history is too short for a reproducible automated `2019 = 100` workflow.
 - Quarterly series are carried into monthly output so the dashboard can present a unified monthly view.
 
@@ -178,6 +182,8 @@ Once deployed, verify:
 Set the repository variable `VITE_API_BASE` to the Railway backend URL, then deploy the Pages workflow from `main`.
 
 The Pages job is intentionally skipped until `VITE_API_BASE` exists so the site does not publish with a dead API target.
+
+Data refreshes run daily, but the generated snapshot is committed only when an upstream observation changes. That commit is what triggers the normal CI and backend deployment flow.
 
 ## Extend It
 

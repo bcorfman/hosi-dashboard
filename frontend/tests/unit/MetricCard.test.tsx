@@ -23,9 +23,9 @@ describe("MetricCard", () => {
   it("uses the low-stress tone when the score is below baseline", () => {
     const { container } = render(
       <MetricCard
-        label="Service pressure"
+        label="Service access stress"
         value={98.51}
-        note="Proxy for staffing pressure"
+        note="How hard it is for households to access everyday services"
         directionLabel="1.5 points less stress than 2019"
       />,
     );

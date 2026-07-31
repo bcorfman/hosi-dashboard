@@ -30,7 +30,7 @@ def hosi_latest() -> dict[str, object]:
             round(financial_resilience, 2) AS financial_resilience,
             round(labor_opportunity, 2) AS labor_opportunity,
             round(household_strain, 2) AS household_strain,
-            round(service_capacity, 2) AS service_capacity
+            round(service_access, 2) AS service_access
         FROM hosi_monthly
         ORDER BY date DESC
         LIMIT 1
@@ -57,7 +57,7 @@ def components() -> dict[str, object]:
             round(financial_resilience, 2) AS financial_resilience,
             round(labor_opportunity, 2) AS labor_opportunity,
             round(household_strain, 2) AS household_strain,
-            round(service_capacity, 2) AS service_capacity
+            round(service_access, 2) AS service_access
         FROM hosi_monthly
         ORDER BY date
         """
@@ -86,4 +86,3 @@ def source_metadata() -> object:
 @app.get("/api/methodology")
 def methodology_notes() -> object:
     return methodology()
-

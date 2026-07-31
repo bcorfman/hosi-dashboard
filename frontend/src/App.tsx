@@ -141,10 +141,10 @@ function OverviewPage({ latest, timeseries }: { latest: LatestResponse; timeseri
           directionLabel={stressDelta(latest.labor_opportunity)}
         />
         <MetricCard
-          label="Service pressure"
-          value={latest.service_capacity}
-          note="How much strain businesses face in actually staffing the services they advertise"
-          directionLabel={stressDelta(latest.service_capacity)}
+          label="Service access stress"
+          value={latest.service_access}
+          note="Childcare and medical-care costs plus provider capacity, rolled into one household access score"
+          directionLabel={stressDelta(latest.service_access)}
         />
       </section>
       <section className="panel compact-panel">
@@ -185,7 +185,7 @@ function ComponentsPage({ components }: { components: ComponentResponse }) {
             { key: "financial_resilience", label: "Financial stress", color: "#7f2f20" },
             { key: "labor_opportunity", label: "Opportunity stress", color: "#2c6e63" },
             { key: "household_strain", label: "Household strain", color: "#aa7b00" },
-            { key: "service_capacity", label: "Service pressure", color: "#3f4e8c" },
+            { key: "service_access", label: "Service access stress", color: "#3f4e8c" },
           ]}
           height={300}
         />
@@ -230,7 +230,7 @@ function ComparisonPage({ latest }: { latest: LatestResponse }) {
     ["Financial resilience", latest.financial_resilience],
     ["Labor opportunity", latest.labor_opportunity],
     ["Household strain", latest.household_strain],
-    ["Service capacity", latest.service_capacity],
+    ["Service access stress", latest.service_access],
   ];
   return (
     <Layout>

@@ -154,35 +154,63 @@ SERIES_DEFINITIONS: tuple[SeriesDefinition, ...] = (
         public_url="https://fred.stlouisfed.org/series/LNS12026620",
     ),
     SeriesDefinition(
-        key="leisure_hospitality_employment",
-        title="Leisure and Hospitality Employment",
+        key="childcare_cost_index",
+        title="Childcare Cost Index",
         source="U.S. Bureau of Labor Statistics via FRED",
-        dataset="Current Employment Statistics",
-        series_id="USLAH",
+        dataset="Consumer Price Index",
+        series_id="CUUR0000SEEB",
         frequency="monthly",
-        category="service_capacity",
-        direction="positive",
-        weight=0.60,
-        units="thousands of persons",
-        notes="Lower employment implies tighter in-person service capacity.",
-        public_url="https://fred.stlouisfed.org/series/USLAH",
+        category="service_access",
+        direction="negative",
+        weight=0.25,
+        units="index 1982-84=100",
+        notes="Higher childcare prices make an essential service less affordable for families.",
+        public_url="https://fred.stlouisfed.org/series/CUUR0000SEEB",
     ),
     SeriesDefinition(
-        key="job_openings_rate",
-        title="Job Openings Rate",
+        key="medical_care_cost_index",
+        title="Medical Care Services Cost Index",
         source="U.S. Bureau of Labor Statistics via FRED",
-        dataset="Job Openings and Labor Turnover Survey",
-        series_id="JTUJOR",
+        dataset="Consumer Price Index",
+        series_id="CUSR0000SAM2",
         frequency="monthly",
-        category="service_capacity",
+        category="service_access",
         direction="negative",
-        weight=0.40,
-        units="percent",
+        weight=0.25,
+        units="index 1982-84=100",
+        notes="Higher medical-care prices make healthcare less affordable for households.",
+        public_url="https://fred.stlouisfed.org/series/CUSR0000SAM2",
+    ),
+    SeriesDefinition(
+        key="childcare_employment",
+        title="Childcare Services Employment",
+        source="U.S. Bureau of Labor Statistics via FRED",
+        dataset="Current Employment Statistics",
+        series_id="CES6562440001",
+        frequency="monthly",
+        category="service_access",
+        direction="positive",
+        weight=0.25,
+        units="thousands of persons",
+        notes="Higher childcare employment is a provider-capacity proxy for family access.",
+        public_url="https://fred.stlouisfed.org/series/CES6562440001",
+    ),
+    SeriesDefinition(
+        key="healthcare_social_assistance_employment",
+        title="Healthcare and Social Assistance Employment",
+        source="U.S. Bureau of Labor Statistics via FRED",
+        dataset="Current Employment Statistics",
+        series_id="CES6562000001",
+        frequency="monthly",
+        category="service_access",
+        direction="positive",
+        weight=0.25,
+        units="thousands of persons",
         notes=(
-            "Higher openings relative to baseline are interpreted as capacity pressure when paired "
-            "with slower staffing and recovery in service employment."
+            "Higher healthcare and social-assistance employment is a provider-capacity proxy "
+            "for household access."
         ),
-        public_url="https://fred.stlouisfed.org/series/JTUJOR",
+        public_url="https://fred.stlouisfed.org/series/CES6562000001",
     ),
 )
 
@@ -190,7 +218,7 @@ GROUP_WEIGHTS: dict[str, float] = {
     "financial_resilience": 0.35,
     "labor_opportunity": 0.30,
     "household_strain": 0.15,
-    "service_capacity": 0.20,
+    "service_access": 0.20,
 }
 
 METHODOLOGY = {
@@ -211,8 +239,9 @@ METHODOLOGY = {
     "caveats": [
         "HOSI is experimental and not an official government statistic.",
         (
-            "Service-capacity pressure is measured with labor-market proxies rather "
-            "than direct queue or service availability data."
+            "Service-access stress combines childcare and medical-care prices with provider "
+            "employment as a capacity proxy; it does not yet include direct wait-time or "
+            "unmet-need survey data."
         ),
         (
             "The housing affordability input uses a reproducible official proxy "

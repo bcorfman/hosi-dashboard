@@ -1,0 +1,42 @@
+name: refresh-data
+
+on:
+  schedule:
+    # FRED series publish on different schedules. Check daily so the snapshot
+    # advances as soon as a new observation is available.
+    - cron: "0 13 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v7
+      - uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9 # v9.0.0
+        with:
+          python-version: "3.13"
+      - run: uv venv
+      - run: . .venv/bin/activate && uv pip install -e .
+      - run: . .venv/bin/activate && python -m etl.build_hosi
+      - name: Commit changed snapshot
+        working-directory: .
+        run: |
+          git add data/processed/hosi.duckdb \
+            data/processed/hosi_monthly.parquet \
+            data/processed/component_scores.parquet \
+            data/processed/sources.json \
+            data/processed/methodology.json
+          if git diff --cached --quiet; then
+            echo "No upstream data changes; leaving the backend untouched."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Refresh HOSI data snapshot"
+          git push
