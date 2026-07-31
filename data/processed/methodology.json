@@ -8,7 +8,7 @@
   },
   "caveats": [
     "HOSI is experimental and not an official government statistic.",
-    "Service-capacity pressure is measured with labor-market proxies rather than direct queue or service availability data.",
+    "Service-access stress combines childcare and medical-care prices with provider employment as a capacity proxy; it does not yet include direct wait-time or unmet-need survey data.",
     "The housing affordability input uses a reproducible official proxy because the current FRED-hosted NAR fixed HAI window is too short for a 2019 baseline workflow.",
     "Quarterly series are forward-filled to monthly cadence after release dates to support a unified monthly dashboard."
   ]

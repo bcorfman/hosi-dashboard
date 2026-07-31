@@ -4,7 +4,7 @@ export type LatestResponse = {
   financial_resilience: number;
   labor_opportunity: number;
   household_strain: number;
-  service_capacity: number;
+  service_access: number;
 };
 
 export type TimePoint = {

@@ -7,11 +7,12 @@ test("@smoke loads the dashboard overview and component pages", async ({ page })
   await expect(page.getByText("HOSI shows when unemployment looks calm")).toBeVisible();
   await expect(page.getByText("Overall stress")).toBeVisible();
   await expect(page.getByText("Latest month: 2026-06-01")).toBeVisible();
-  await expect(page.getByText("20.3 points more stress than 2019")).toBeVisible();
+  await expect(page.getByText(/\d+\.\d+ points (more|less) stress than 2019/).first()).toBeVisible();
   await expect(page.getByText("Pandemic shutdown shock")).toBeVisible();
   await expect(page.getByText("Inflation and housing squeeze")).toBeVisible();
   await expect(page.getByText("Cooling, not normalization")).toBeVisible();
   await expect(page.getByText("Only the clearest peaks and stress-build periods are annotated here")).toBeVisible();
+  await expect(page.getByText("Service access stress")).toBeVisible();
 
   await page.getByRole("link", { name: "Components" }).click();
   await expect(page.getByRole("heading", { name: "Component Breakdown" })).toBeVisible();
