@@ -32,7 +32,7 @@ RETRYABLE_STATUS_CODES = {404, 429, 500, 502, 503, 504}
 
 
 def fred_csv_url(series_id: str) -> str:
-    return f"https://fred.stlouisfed.org/graph/fredgraph.csv?id={series_id}"
+    return f"https://alfred.stlouisfed.org/graph/alfredgraph.csv?id={series_id}"
 
 
 def fetch_fred_csv(series_id: str) -> str:
@@ -46,7 +46,12 @@ def fetch_fred_csv(series_id: str) -> str:
         except requests.RequestException as error:
             last_error = error
             status_code = getattr(getattr(error, "response", None), "status_code", None)
-            if attempt == 2 or status_code not in RETRYABLE_STATUS_CODES:
+            retryable_network_error = isinstance(
+                error, (requests.Timeout, requests.ConnectionError)
+            )
+            if attempt == 2 or (
+                status_code not in RETRYABLE_STATUS_CODES and not retryable_network_error
+            ):
                 break
             time.sleep(2**attempt)
     assert last_error is not None

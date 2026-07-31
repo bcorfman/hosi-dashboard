@@ -1,4 +1,3 @@
-import { NavLink, Route, Routes } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { api, ComponentResponse, LatestResponse, TimePoint } from "./lib/api";
 import { MetricCard } from "./components/MetricCard";
@@ -11,6 +10,27 @@ type Methodology = {
   aggregation: Record<string, string>;
   caveats: string[];
 };
+
+function useHashPath() {
+  const getPath = () => window.location.hash.slice(1) || "/";
+  const [path, setPath] = useState(getPath);
+
+  useEffect(() => {
+    const handleHashChange = () => setPath(getPath());
+    window.addEventListener("hashchange", handleHashChange);
+    return () => window.removeEventListener("hashchange", handleHashChange);
+  }, []);
+
+  return path;
+}
+
+function HashNavLink({ to, children, currentPath }: { to: string; children: React.ReactNode; currentPath: string }) {
+  return (
+    <a className={currentPath === to ? "active" : undefined} href={`#${to}`}>
+      {children}
+    </a>
+  );
+}
 
 function useDashboardData() {
   const [latest, setLatest] = useState<LatestResponse | null>(null);
@@ -36,6 +56,8 @@ function useDashboardData() {
 }
 
 function Layout({ children }: { children: React.ReactNode }) {
+  const currentPath = useHashPath();
+
   return (
     <div className="app-shell">
       <header className="hero">
@@ -48,10 +70,10 @@ function Layout({ children }: { children: React.ReactNode }) {
           </p>
         </div>
         <nav className="nav">
-          <NavLink to="/">Overview</NavLink>
-          <NavLink to="/components">Components</NavLink>
-          <NavLink to="/comparison">Comparison</NavLink>
-          <NavLink to="/methodology">Methodology</NavLink>
+          <HashNavLink to="/" currentPath={currentPath}>Overview</HashNavLink>
+          <HashNavLink to="/components" currentPath={currentPath}>Components</HashNavLink>
+          <HashNavLink to="/comparison" currentPath={currentPath}>Comparison</HashNavLink>
+          <HashNavLink to="/methodology" currentPath={currentPath}>Methodology</HashNavLink>
         </nav>
       </header>
       {children}
@@ -297,6 +319,7 @@ function MethodologyPage({
 }
 
 export default function App() {
+  const path = useHashPath();
   const { latest, timeseries, components, sources, methodology, error } = useDashboardData();
 
   if (error) {
@@ -306,12 +329,8 @@ export default function App() {
     return <div className="status-shell">Loading HOSI dashboard…</div>;
   }
 
-  return (
-    <Routes>
-      <Route path="/" element={<OverviewPage latest={latest} timeseries={timeseries} />} />
-      <Route path="/components" element={<ComponentsPage components={components} />} />
-      <Route path="/comparison" element={<ComparisonPage latest={latest} />} />
-      <Route path="/methodology" element={<MethodologyPage methodology={methodology} sources={sources} />} />
-    </Routes>
-  );
+  if (path === "/components") return <ComponentsPage components={components} />;
+  if (path === "/comparison") return <ComparisonPage latest={latest} />;
+  if (path === "/methodology") return <MethodologyPage methodology={methodology} sources={sources} />;
+  return <OverviewPage latest={latest} timeseries={timeseries} />;
 }
