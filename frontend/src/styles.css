@@ -212,6 +212,36 @@ a {
   gap: 14px;
 }
 
+.formula-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.formula-card {
+  border: 1px solid rgba(54, 64, 50, 0.12);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.56);
+  padding: 12px;
+}
+
+.formula-card p {
+  margin: 8px 0 0;
+}
+
+.formula-card .eyebrow {
+  margin-top: 0;
+}
+
+.formula-card code {
+  display: inline-block;
+  margin-top: 4px;
+  padding: 3px 5px;
+  border-radius: 5px;
+  background: rgba(31, 84, 72, 0.08);
+  font-size: 0.9em;
+}
+
 .comparison-row {
   padding: 18px;
   display: flex;
@@ -261,6 +291,10 @@ a {
   }
 
   .annotation-strip {
+    grid-template-columns: 1fr;
+  }
+
+  .formula-grid {
     grid-template-columns: 1fr;
   }
 

@@ -224,7 +224,7 @@ function ComponentsPage({ components }: { components: ComponentResponse }) {
   );
 }
 
-function ComparisonPage({ latest }: { latest: LatestResponse }) {
+export function ComparisonPage({ latest }: { latest: LatestResponse }) {
   const rows = [
     ["Overall HOSI", latest.hosi],
     ["Financial resilience", latest.financial_resilience],
@@ -256,6 +256,38 @@ function ComparisonPage({ latest }: { latest: LatestResponse }) {
               </p>
             </article>
           ))}
+        </div>
+      </section>
+      <section className="panel prose score-formula-panel">
+        <div className="panel-head">
+          <h2>How the score is calculated</h2>
+          <p>
+            Every stage keeps 2019 as the reference point, then combines the results using the
+            configured weights.
+          </p>
+        </div>
+        <div className="formula-grid">
+          <article className="formula-card">
+            <p className="eyebrow">1 · Normalize each source</p>
+            <p>
+              Stress-oriented source: <code>current value ÷ 2019 average × 100</code>
+            </p>
+            <p>
+              Opportunity or resilience source: <code>2019 average ÷ current value × 100</code>
+            </p>
+          </article>
+          <article className="formula-card">
+            <p className="eyebrow">2 · Build each component</p>
+            <p>
+              <code>Σ (source score × series weight) ÷ Σ series weights</code>
+            </p>
+          </article>
+          <article className="formula-card">
+            <p className="eyebrow">3 · Build overall HOSI</p>
+            <p>
+              <code>Σ (component score × group weight) ÷ Σ group weights</code>
+            </p>
+          </article>
         </div>
       </section>
     </Layout>
