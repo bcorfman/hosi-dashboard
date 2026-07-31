@@ -34,6 +34,10 @@ def test_fetch_fred_csv_retries_transient_404(monkeypatch) -> None:
     assert calls[0] == (fred_csv_url("MDSP"), REQUEST_HEADERS, 60)
 
 
+def test_fred_csv_url_uses_alfred_backup_endpoint() -> None:
+    assert fred_csv_url("PSAVERT") == "https://alfred.stlouisfed.org/graph/alfredgraph.csv?id=PSAVERT"
+
+
 def test_fetch_fred_csv_raises_on_non_retryable_error(monkeypatch) -> None:
     def fake_get(url: str, headers: dict[str, str], timeout: int) -> StubResponse:
         return StubResponse(403)
