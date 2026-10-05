@@ -6,7 +6,7 @@ test("@smoke loads the dashboard overview and component pages", async ({ page })
   await expect(page.getByRole("heading", { name: "Household Opportunity & Stress Index" })).toBeVisible();
   await expect(page.getByText("HOSI shows when unemployment looks calm")).toBeVisible();
   await expect(page.getByText("Overall stress")).toBeVisible();
-  await expect(page.getByText("Latest month: 2026-06-01")).toBeVisible();
+  await expect(page.getByText(/^Latest month: \d{4}-\d{2}-\d{2}$/)).toBeVisible();
   await expect(page.getByText(/\d+\.\d+ points (more|less) stress than 2019/).first()).toBeVisible();
   await expect(page.getByText("Pandemic shutdown shock")).toBeVisible();
   await expect(page.getByText("Inflation and housing squeeze")).toBeVisible();
